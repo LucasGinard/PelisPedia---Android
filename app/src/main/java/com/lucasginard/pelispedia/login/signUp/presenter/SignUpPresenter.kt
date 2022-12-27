@@ -1,19 +1,22 @@
 package com.lucasginard.pelispedia.login.signUp.presenter
 
-class SignUpPresenter(view:SignUpContract.View):SignUpContract.Presenter {
+class SignUpPresenter(var view:SignUpContract.View):SignUpContract.Presenter {
 
-    override fun validateInput(input: String): Boolean {
-        return !input.contains(" ")
+    override fun validateInputs(user: String,password:String): Boolean {
+        val validate = !user.contains(" ") && !password.contains(" ")
+        if (!validate) view.showError() else view.hideError()
+        return validate
     }
 
 }
 
 interface SignUpContract{
     interface View{
-
+        fun showError()
+        fun hideError()
     }
 
     interface Presenter{
-        fun validateInput(input:String):Boolean
+        fun validateInputs(user: String,password:String):Boolean
     }
 }

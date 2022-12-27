@@ -1,7 +1,7 @@
 package com.lucasginard.pelispedia.network
 
 import com.lucasginard.pelispedia.BuildConfig
-import com.lucasginard.pelispedia.home.step1.model.MoviesResponse
+import com.lucasginard.pelispedia.home.step1ListMovies.model.MoviesResponse
 import com.lucasginard.pelispedia.utils.Constants
 import retrofit2.Response
 import retrofit2.http.GET

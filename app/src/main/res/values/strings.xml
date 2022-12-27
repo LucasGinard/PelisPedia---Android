@@ -4,4 +4,5 @@
     <string name="rememberMe">Recordar</string>
     <string name="hintUsername">ingrese su usuario</string>
     <string name="hintPassword">ingrese su contraseña</string>
+    <string name="errorValidate">Verifique que no contenga espacios</string>
 </resources>

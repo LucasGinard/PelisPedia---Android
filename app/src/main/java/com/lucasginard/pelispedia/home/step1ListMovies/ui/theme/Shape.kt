@@ -1,4 +1,4 @@
-package com.lucasginard.pelispedia.home.step1.ui.theme
+package com.lucasginard.pelispedia.home.step1ListMovies.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

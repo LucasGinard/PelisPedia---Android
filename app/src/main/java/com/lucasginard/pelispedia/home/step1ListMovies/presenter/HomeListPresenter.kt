@@ -1,6 +1,6 @@
-package com.lucasginard.pelispedia.home.step1.presenter
+package com.lucasginard.pelispedia.home.step1ListMovies.presenter
 
-import com.lucasginard.pelispedia.home.step1.model.Movie
+import com.lucasginard.pelispedia.home.step1ListMovies.model.Movie
 import com.lucasginard.pelispedia.network.APIService
 import com.lucasginard.pelispedia.network.Service
 import com.lucasginard.pelispedia.utils.Constants

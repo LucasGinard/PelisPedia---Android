@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.lucasginard.pelispedia.R
 import com.lucasginard.pelispedia.databinding.FragmentSignUpBinding
 import com.lucasginard.pelispedia.home.HomeActivity
 import com.lucasginard.pelispedia.login.signUp.presenter.SignUpContract
@@ -34,15 +35,21 @@ class SignUpFragment : Fragment(),SignUpContract.View {
 
     private fun validateLogin(){
         try {
-            if (presenter.validateInput(_binding.editUser.text.toString()) &&
-                presenter.validateInput(_binding.editPassword.text.toString())){
+            if (presenter.validateInputs(_binding.editUser.text.toString(),_binding.editPassword.text.toString())){
                 activity?.startActivity(Intent(activity, HomeActivity::class.java))
-            }else{
-
             }
         }catch (e:Exception){
-
+            showError()
         }
+    }
 
+    override fun showError() {
+        _binding.editUser.error = activity?.getString(R.string.errorValidate) ?: ""
+        _binding.editPassword.error = activity?.getString(R.string.errorValidate) ?: ""
+    }
+
+    override fun hideError() {
+        _binding.editUser.isEnabled = true
+        _binding.editPassword.isEnabled = true
     }
 }

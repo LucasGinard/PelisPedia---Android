@@ -1,4 +1,4 @@
-package com.lucasginard.pelispedia.home.step1.model
+package com.lucasginard.pelispedia.home.step1ListMovies.model
 
 import com.google.gson.annotations.SerializedName
 

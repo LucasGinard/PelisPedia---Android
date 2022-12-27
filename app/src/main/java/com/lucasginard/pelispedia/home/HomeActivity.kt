@@ -3,7 +3,7 @@ package com.lucasginard.pelispedia.home
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.lucasginard.pelispedia.databinding.ActivityHomeBinding
-import com.lucasginard.pelispedia.home.step1.HomeListFragment
+import com.lucasginard.pelispedia.home.step1ListMovies.HomeListFragment
 
 
 class HomeActivity : AppCompatActivity() {

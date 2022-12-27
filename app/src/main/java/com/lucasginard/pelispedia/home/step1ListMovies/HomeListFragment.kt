@@ -1,10 +1,9 @@
-package com.lucasginard.pelispedia.home.step1
+package com.lucasginard.pelispedia.home.step1ListMovies
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -26,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.lucasginard.pelispedia.BuildConfig
-import com.lucasginard.pelispedia.home.step1.model.Movie
-import com.lucasginard.pelispedia.home.step1.presenter.HomeListContract
-import com.lucasginard.pelispedia.home.step1.presenter.HomeListPresenter
-import com.lucasginard.pelispedia.home.step1.ui.theme.TemplateExampleTheme
+import com.lucasginard.pelispedia.home.step1ListMovies.model.Movie
+import com.lucasginard.pelispedia.home.step1ListMovies.presenter.HomeListContract
+import com.lucasginard.pelispedia.home.step1ListMovies.presenter.HomeListPresenter
+import com.lucasginard.pelispedia.home.step1ListMovies.ui.theme.TemplateExampleTheme
 import com.lucasginard.pelispedia.utils.Constants
 import com.lucasginard.pelispedia.utils.ExpandableText
 import com.lucasginard.pelispedia.utils.contentView
