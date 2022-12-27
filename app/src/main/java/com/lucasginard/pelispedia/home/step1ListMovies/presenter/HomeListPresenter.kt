@@ -56,6 +56,7 @@ class HomeListPresenter(var view:HomeListContract.View) :HomeListContract.Presen
 interface HomeListContract{
     interface View{
         fun showMovies(isSucess:Boolean,title:String)
+        fun goDetail(movie: Movie)
     }
 
     interface Presenter{

@@ -24,10 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.lucasginard.pelispedia.BuildConfig
+import com.lucasginard.pelispedia.R
+import com.lucasginard.pelispedia.home.HomeActivity
 import com.lucasginard.pelispedia.home.step1ListMovies.model.Movie
 import com.lucasginard.pelispedia.home.step1ListMovies.presenter.HomeListContract
 import com.lucasginard.pelispedia.home.step1ListMovies.presenter.HomeListPresenter
 import com.lucasginard.pelispedia.home.step1ListMovies.ui.theme.TemplateExampleTheme
+import com.lucasginard.pelispedia.home.step2DetailMovie.DetailMovieFragment
 import com.lucasginard.pelispedia.utils.Constants
 import com.lucasginard.pelispedia.utils.ExpandableText
 import com.lucasginard.pelispedia.utils.contentView
@@ -38,6 +41,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
     lateinit var flagListMovie: MutableState<Boolean>
     lateinit var listMovies: SnapshotStateList<Movie>
     lateinit var titleHome: MutableState<String>
+    lateinit var activityHome:HomeActivity
     val options = listOf(Constants.TITLE_POPULAR,Constants.TITLE_TOP_SCORE,Constants.TITLE_ON_AIR)
 
     override fun onCreateView(
@@ -47,6 +51,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
         TemplateExampleTheme() {
             Surface(color = MaterialTheme.colors.background) {
                 presenter = HomeListPresenter(this)
+                activityHome = activity as HomeActivity
                 presenter.getPopularMovies()
                 baseHomeList()
             }
@@ -148,7 +153,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                             .padding(bottom = 16.dp)
                             .clickable(
                                 onClick = {
-
+                                    goDetail(item)
                                 }
                             )
                     ) {
@@ -210,6 +215,10 @@ class HomeListFragment : Fragment(), HomeListContract.View {
         titleHome.value = title
         listMovies.clear()
         listMovies.addAll(presenter.getListMovies)
+    }
+
+    override fun goDetail(movie: Movie) {
+        activityHome.goFragmentDetail(movie)
     }
 
     @Preview(showBackground = true)
