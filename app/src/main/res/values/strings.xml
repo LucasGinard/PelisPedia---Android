@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PelisPedia</string>
+    <string name="btnTextLogin">Acceder</string>
+    <string name="rememberMe">Recordar</string>
+    <string name="hintUsername">ingrese su usuario</string>
+    <string name="hintPassword">ingrese su contraseña</string>
 </resources>
