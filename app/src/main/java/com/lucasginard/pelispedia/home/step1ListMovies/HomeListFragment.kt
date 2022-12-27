@@ -188,6 +188,8 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                     }
                 }
             }
+        }else{
+            CircularProgressIndicator()
         }
     }
 
@@ -207,7 +209,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
 
     @Composable
     private fun componentDescriptionMovie(description:String) {
-        ExpandableText(text = description)
+        if(description.isNotEmpty()) ExpandableText(text = description)
     }
 
     override fun showMovies(isSucess:Boolean,title:String) {

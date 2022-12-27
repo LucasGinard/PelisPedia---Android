@@ -11,19 +11,19 @@ import retrofit2.http.Query
 
 interface APIService {
 
-    @GET("movie/popular")
+    @GET("tv/popular")
     suspend fun getPopularMovies(@Query("language") language:String = Constants.LANGUAGE_DEFAULT,
                                  @Query("api_key") apiKey:String = BuildConfig.API_KEY): Response<MoviesResponse>
 
-    @GET("movie/top_rated")
+    @GET("tv/top_rated")
     suspend fun getTopRatedMovies(@Query("language") language:String = Constants.LANGUAGE_DEFAULT,
                                   @Query("api_key") apiKey:String = BuildConfig.API_KEY): Response<MoviesResponse>
 
-    @GET("movie/now_playing")
+    @GET("tv/on_the_air")
     suspend fun getNowPlayingMovies(@Query("language") language:String = Constants.LANGUAGE_DEFAULT,
                                     @Query("api_key") apiKey:String = BuildConfig.API_KEY): Response<MoviesResponse>
 
-    @GET("movie/{id}/credits")
+    @GET("tv/{id}/credits")
     suspend fun getCreditsMovie(@Path("id") id:Int,
                                 @Query("language") language:String = Constants.LANGUAGE_DEFAULT,
                                 @Query("api_key") apiKey:String = BuildConfig.API_KEY

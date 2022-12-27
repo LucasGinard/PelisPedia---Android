@@ -1,8 +1,12 @@
 <resources>
-    <string name="app_name">PelisPedia</string>
+    <string name="app_name">SeriesPedia</string>
     <string name="btnTextLogin">Acceder</string>
     <string name="rememberMe">Recordar</string>
     <string name="hintUsername">ingrese su usuario</string>
     <string name="hintPassword">ingrese su contraseña</string>
     <string name="errorValidate">Verifique que no contenga espacios</string>
+    <string name="titleDirector">Director: </string>
+    <string name="titleCast">Elenco: </string>
+    <string name="titleDescription">Descripción: </string>
+    <string name="titleRated">Calificación: </string>
 </resources>
