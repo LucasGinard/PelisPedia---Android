@@ -1,13 +1,13 @@
-package com.lucasginard.pelispedia.home.step1ListMovies.model
+package com.lucasginard.pelispedia.home.step1ListSeries.model
 
 import com.google.gson.annotations.SerializedName
 
 
-data class MoviesResponse (
-    @SerializedName("results") var results: ArrayList<Movie> = arrayListOf(),
+data class SerieResponse (
+    @SerializedName("results") var results: ArrayList<Serie> = arrayListOf(),
 )
 
-data class Movie(
+data class Serie(
     @SerializedName("adult") var adult: Boolean? = null,
     @SerializedName("backdrop_path") var backdropPath: String? = null,
     @SerializedName("genre_ids") var genreIds: ArrayList<Int> = arrayListOf(),

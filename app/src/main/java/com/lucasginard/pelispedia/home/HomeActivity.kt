@@ -3,9 +3,9 @@ package com.lucasginard.pelispedia.home
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.lucasginard.pelispedia.databinding.ActivityHomeBinding
-import com.lucasginard.pelispedia.home.step1ListMovies.HomeListFragment
-import com.lucasginard.pelispedia.home.step1ListMovies.model.Movie
-import com.lucasginard.pelispedia.home.step2DetailMovie.DetailMovieFragment
+import com.lucasginard.pelispedia.home.step1ListSeries.HomeListFragment
+import com.lucasginard.pelispedia.home.step1ListSeries.model.Serie
+import com.lucasginard.pelispedia.home.step2DetailSerie.DetailSerieFragment
 
 
 class HomeActivity : AppCompatActivity() {
@@ -25,9 +25,9 @@ class HomeActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun goFragmentDetail(movie: Movie){
+    fun goFragmentDetail(serie: Serie){
         supportFragmentManager.beginTransaction()
-            .replace(binding.fragmentContainer.id, DetailMovieFragment(movie))
+            .replace(binding.fragmentContainer.id, DetailSerieFragment(serie))
             .addToBackStack(null)
             .commit()
     }

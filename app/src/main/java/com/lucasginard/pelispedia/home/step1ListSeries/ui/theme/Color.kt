@@ -1,4 +1,4 @@
-package com.lucasginard.pelispedia.home.step1ListMovies.ui.theme
+package com.lucasginard.pelispedia.home.step1ListSeries.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

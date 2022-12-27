@@ -1,9 +1,8 @@
-package com.lucasginard.pelispedia.home.step2DetailMovie
+package com.lucasginard.pelispedia.home.step2DetailSerie
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -30,18 +28,18 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import coil.compose.AsyncImage
 import com.lucasginard.pelispedia.BuildConfig
-import com.lucasginard.pelispedia.home.step1ListMovies.model.Movie
-import com.lucasginard.pelispedia.home.step1ListMovies.ui.theme.TemplateExampleTheme
-import com.lucasginard.pelispedia.home.step2DetailMovie.presenter.DetailMovieContract
-import com.lucasginard.pelispedia.home.step2DetailMovie.presenter.DetailMoviePresenter
+import com.lucasginard.pelispedia.home.step1ListSeries.model.Serie
+import com.lucasginard.pelispedia.home.step1ListSeries.ui.theme.TemplateExampleTheme
+import com.lucasginard.pelispedia.home.step2DetailSerie.presenter.DetailidSerieContract
+import com.lucasginard.pelispedia.home.step2DetailSerie.presenter.DetailSeriePresenter
 import com.lucasginard.pelispedia.utils.contentView
 import com.lucasginard.pelispedia.R
 import com.lucasginard.pelispedia.utils.ExpandableText
 
-class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View {
+class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.View {
 
-    lateinit var presenter:DetailMoviePresenter
-    lateinit var flagDetailMovie: MutableState<Boolean>
+    lateinit var presenter:DetailSeriePresenter
+    lateinit var flagDetailSerie: MutableState<Boolean>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +47,8 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
     ) = contentView(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)) {
         TemplateExampleTheme() {
             Surface(color = MaterialTheme.colors.background) {
-                presenter = DetailMoviePresenter(this)
-                movie.id?.let { presenter.getCreditsMovie(it) }
+                presenter = DetailSeriePresenter(this)
+                serie.id?.let { presenter.getCreditsSerie(it) }
                 baseHomeDetail()
             }
         }
@@ -58,7 +56,7 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
 
     @Composable
     private fun baseHomeDetail() {
-        flagDetailMovie = remember { mutableStateOf(false) }
+        flagDetailSerie = remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .padding(end = 20.dp, start = 20.dp)
@@ -68,9 +66,9 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (flagDetailMovie.value){
+            if (flagDetailSerie.value){
                 AsyncImage(
-                    model = "${BuildConfig.BASE_URL_IMAGE}${movie.posterPath}",
+                    model = "${BuildConfig.BASE_URL_IMAGE}${serie.posterPath}",
                     contentDescription = "",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
@@ -78,8 +76,8 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
                         .fillMaxWidth()
                 )
                 componentDirector()
-                componentRatedMovie()
-                componentDescriptionMovie()
+                componentRatedSerie()
+                componentDescriptionSerie()
                 componentCastList()
             }else{
                 CircularProgressIndicator()
@@ -88,7 +86,7 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
     }
 
     @Composable
-    private fun componentDescriptionMovie() {
+    private fun componentDescriptionSerie() {
         Row(
             Modifier.padding(top = 12.dp, bottom = 12.dp)
         ) {
@@ -98,12 +96,12 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
                 modifier = Modifier
                     .padding(end = 8.dp)
             )
-            movie.overview?.let { ExpandableText(text = it) }
+            serie.overview?.let { ExpandableText(text = it) }
         }
     }
 
     @Composable
-    private fun componentRatedMovie(){
+    private fun componentRatedSerie(){
         Row {
             Icon(
                 imageVector = Icons.Default.StarRate,
@@ -115,7 +113,7 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
                     .padding(end = 8.dp)
             )
             Text(
-                text = movie.voteAverage.toString(),
+                text = serie.voteAverage.toString(),
             )
         }
     }
@@ -192,8 +190,8 @@ class DetailMovieFragment(var movie: Movie): Fragment(),DetailMovieContract.View
         }
     }
 
-    override fun loadDetailMovie(isSucess: Boolean) {
-        flagDetailMovie.value = isSucess
+    override fun loadDetailSerie(isSucess: Boolean) {
+        flagDetailSerie.value = isSucess
     }
 
     override fun errorUI() {

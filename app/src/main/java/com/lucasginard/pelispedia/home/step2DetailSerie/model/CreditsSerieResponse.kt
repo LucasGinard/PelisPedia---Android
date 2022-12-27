@@ -1,8 +1,8 @@
-package com.lucasginard.pelispedia.home.step2DetailMovie.model
+package com.lucasginard.pelispedia.home.step2DetailSerie.model
 
 import com.google.gson.annotations.SerializedName
 
-data class CreditsMovieResponse(
+data class CreditsSerieResponse(
     @SerializedName("id") var id: Int? = null,
     @SerializedName("cast") var cast: ArrayList<Cast> = arrayListOf(),
     @SerializedName("crew") var crew: ArrayList<Crew> = arrayListOf()

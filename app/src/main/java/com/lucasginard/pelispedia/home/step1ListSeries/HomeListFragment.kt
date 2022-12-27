@@ -1,4 +1,4 @@
-package com.lucasginard.pelispedia.home.step1ListMovies
+package com.lucasginard.pelispedia.home.step1ListSeries
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -24,13 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.lucasginard.pelispedia.BuildConfig
-import com.lucasginard.pelispedia.R
 import com.lucasginard.pelispedia.home.HomeActivity
-import com.lucasginard.pelispedia.home.step1ListMovies.model.Movie
-import com.lucasginard.pelispedia.home.step1ListMovies.presenter.HomeListContract
-import com.lucasginard.pelispedia.home.step1ListMovies.presenter.HomeListPresenter
-import com.lucasginard.pelispedia.home.step1ListMovies.ui.theme.TemplateExampleTheme
-import com.lucasginard.pelispedia.home.step2DetailMovie.DetailMovieFragment
+import com.lucasginard.pelispedia.home.step1ListSeries.model.Serie
+import com.lucasginard.pelispedia.home.step1ListSeries.presenter.HomeListContract
+import com.lucasginard.pelispedia.home.step1ListSeries.presenter.HomeListPresenter
+import com.lucasginard.pelispedia.home.step1ListSeries.ui.theme.TemplateExampleTheme
 import com.lucasginard.pelispedia.utils.Constants
 import com.lucasginard.pelispedia.utils.ExpandableText
 import com.lucasginard.pelispedia.utils.contentView
@@ -38,8 +36,8 @@ import com.lucasginard.pelispedia.utils.contentView
 class HomeListFragment : Fragment(), HomeListContract.View {
 
     lateinit var presenter:HomeListPresenter
-    lateinit var flagListMovie: MutableState<Boolean>
-    lateinit var listMovies: SnapshotStateList<Movie>
+    lateinit var flagListSerie: MutableState<Boolean>
+    lateinit var listSeries: SnapshotStateList<Serie>
     lateinit var titleHome: MutableState<String>
     lateinit var activityHome:HomeActivity
     val options = listOf(Constants.TITLE_POPULAR,Constants.TITLE_TOP_SCORE,Constants.TITLE_ON_AIR)
@@ -52,7 +50,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
             Surface(color = MaterialTheme.colors.background) {
                 presenter = HomeListPresenter(this)
                 activityHome = activity as HomeActivity
-                presenter.getPopularMovies()
+                presenter.getPopularSeries()
                 baseHomeList()
             }
         }
@@ -62,8 +60,8 @@ class HomeListFragment : Fragment(), HomeListContract.View {
     @Composable
     private fun baseHomeList() {
         titleHome = remember { mutableStateOf(options[0]) }
-        flagListMovie = remember { mutableStateOf(false) }
-        listMovies = remember { mutableStateListOf<Movie>() }
+        flagListSerie = remember { mutableStateOf(false) }
+        listSeries = remember { mutableStateListOf<Serie>() }
             Column(
                 modifier = Modifier
                     .padding(end = 20.dp, start = 20.dp)
@@ -84,7 +82,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                     )
                     componentSpinnerFilter()
                 }
-                componentListMovies()
+                componentListidSeries()
             }
     }
 
@@ -132,20 +130,20 @@ class HomeListFragment : Fragment(), HomeListContract.View {
 
     private fun callService(call:String){
         when(call){
-            Constants.TITLE_POPULAR -> presenter.getPopularMovies()
-            Constants.TITLE_ON_AIR-> presenter.getNowPlayingMovies()
-            Constants.TITLE_TOP_SCORE-> presenter.getTopRatedMovies()
+            Constants.TITLE_POPULAR -> presenter.getPopularSeries()
+            Constants.TITLE_ON_AIR-> presenter.getNowPlayingSeries()
+            Constants.TITLE_TOP_SCORE-> presenter.getTopRatedSeries()
         }
     }
 
     @Composable
-    private fun componentListMovies() {
-        if (flagListMovie.value) {
+    private fun componentListidSeries() {
+        if (flagListSerie.value) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
             ) {
-                items(listMovies.size) {
-                    val item = listMovies[it]
+                items(listSeries.size) {
+                    val item = listSeries[it]
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
@@ -184,7 +182,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                             )
                         }
 
-                        item.overview?.let { it1 -> componentDescriptionMovie(it1) }
+                        item.overview?.let { it1 -> componentDescriptionSerie(it1) }
                     }
                 }
             }
@@ -208,19 +206,19 @@ class HomeListFragment : Fragment(), HomeListContract.View {
     }
 
     @Composable
-    private fun componentDescriptionMovie(description:String) {
+    private fun componentDescriptionSerie(description:String) {
         if(description.isNotEmpty()) ExpandableText(text = description)
     }
 
-    override fun showMovies(isSucess:Boolean,title:String) {
-        flagListMovie.value = isSucess
+    override fun showSeries(isSucess:Boolean, title:String) {
+        flagListSerie.value = isSucess
         titleHome.value = title
-        listMovies.clear()
-        listMovies.addAll(presenter.getListMovies)
+        listSeries.clear()
+        listSeries.addAll(presenter.getListSeries)
     }
 
-    override fun goDetail(movie: Movie) {
-        activityHome.goFragmentDetail(movie)
+    override fun goDetail(serie: Serie) {
+        activityHome.goFragmentDetail(serie)
     }
 
     @Preview(showBackground = true)
