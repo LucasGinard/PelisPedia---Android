@@ -22,7 +22,7 @@ class SignUpFragment : Fragment(),SignUpContract.View {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSignUpBinding.inflate(layoutInflater)
-        presenter = SignUpPresenter(this)
+        presenter = SignUpPresenter()
         configureOnClickListener()
         return _binding.root
     }
@@ -37,6 +37,8 @@ class SignUpFragment : Fragment(),SignUpContract.View {
         try {
             if (presenter.validateInputs(_binding.editUser.text.toString(),_binding.editPassword.text.toString())){
                 activity?.startActivity(Intent(activity, HomeActivity::class.java))
+            }else{
+                showError()
             }
         }catch (e:Exception){
             showError()
