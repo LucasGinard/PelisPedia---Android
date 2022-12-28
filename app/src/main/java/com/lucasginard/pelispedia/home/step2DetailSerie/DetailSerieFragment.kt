@@ -1,5 +1,6 @@
 package com.lucasginard.pelispedia.home.step2DetailSerie
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ import com.lucasginard.pelispedia.utils.ExpandableText
 class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.View {
 
     lateinit var presenter:DetailSeriePresenter
+    lateinit var flagCreditsSerie: MutableState<Boolean>
     lateinit var flagDetailSerie: MutableState<Boolean>
 
     override fun onCreateView(
@@ -49,6 +51,7 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
             Surface(color = MaterialTheme.colors.background) {
                 presenter = DetailSeriePresenter(this)
                 serie.id?.let { presenter.getCreditsSerie(it) }
+                serie.id?.let { presenter.getDetailSerie(it) }
                 baseHomeDetail()
             }
         }
@@ -56,17 +59,18 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
 
     @Composable
     private fun baseHomeDetail() {
+        flagCreditsSerie = remember { mutableStateOf(false) }
         flagDetailSerie = remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
-                .padding(end = 20.dp, start = 20.dp)
+                .padding(end = 20.dp, start = 20.dp,top = 12.dp)
                 .fillMaxSize()
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (flagDetailSerie.value){
+            if (flagCreditsSerie.value){
                 AsyncImage(
                     model = "${BuildConfig.BASE_URL_IMAGE}${serie.posterPath}",
                     contentDescription = "",
@@ -78,10 +82,29 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
                 componentDirector()
                 componentRatedSerie()
                 componentDescriptionSerie()
+                componentLastOrSeasonOnAir()
                 componentCastList()
             }else{
                 CircularProgressIndicator()
             }
+        }
+    }
+    @Composable
+    private fun componentDirector() {
+        Row(
+            Modifier.padding(top = 12.dp, bottom = 12.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.titleDirector),
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            )
+            Text(
+                text = presenter.getDirector(),
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+            )
         }
     }
 
@@ -119,23 +142,23 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
     }
 
     @Composable
-    private fun componentDirector() {
-        Row(
-            Modifier.padding(top = 12.dp, bottom = 12.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.titleDirector),
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .padding(end = 8.dp)
-            )
-            Text(
-                text = presenter.getDirector(),
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-            )
+    private fun componentLastOrSeasonOnAir(){
+        if (flagDetailSerie.value){
+            val titleTextID = if (presenter.getDetailSerie.inProduction == true) R.string.TvOnAirSesson else R.string.TvLastSesson
+            Row {
+                Text(
+                    text = stringResource(id = titleTextID),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                )
+                Text(
+                    text = "${presenter.getDetailSerie.lastEpisodeToAir?.seasonNumber.toString()} temporada"
+                )
+            }
         }
     }
+
+
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
@@ -147,42 +170,44 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
             fontSize = 24.sp,
         )
         LazyRow {
-            itemsIndexed(presenter.getListCast) { index, item ->
-                Card(
-                    onClick = {
+            if (presenter.getListCast.isNotEmpty()){
+                itemsIndexed(presenter.getListCast) { index, item ->
+                    Card(
+                        onClick = {
 
-                    },
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(120.dp)
-                        .height(220.dp),
-                    elevation = 6.dp
-                ) {
-                    Column(
+                        },
                         modifier = Modifier
                             .padding(8.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .width(120.dp)
+                            .height(220.dp),
+                        elevation = 6.dp
                     ) {
-                        Spacer(modifier = Modifier.height(5.dp))
-                        AsyncImage(
-                            model = "${BuildConfig.BASE_URL_IMAGE}${item.profilePath}",
-                            contentDescription = "",
-                            contentScale = ContentScale.Fit,
+                        Column(
                             modifier = Modifier
-                                .size(120.dp)
-                                .padding(5.dp),
-                            alignment = Alignment.Center,
-                            placeholder = painterResource(id = R.drawable.ic_launcher_foreground)
+                                .padding(8.dp)
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(modifier = Modifier.height(5.dp))
+                            AsyncImage(
+                                model = "${BuildConfig.BASE_URL_IMAGE}${item.profilePath}",
+                                contentDescription = "",
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .padding(5.dp),
+                                alignment = Alignment.Center,
+                                placeholder = painterResource(id = R.drawable.ic_launcher_foreground)
 
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        item.name?.let {
-                            Text(
-                                text = it,
-                                modifier = Modifier.padding(4.dp),
-                                textAlign = TextAlign.Center
                             )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            item.name?.let {
+                                Text(
+                                    text = it,
+                                    modifier = Modifier.padding(4.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
@@ -190,12 +215,20 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
         }
     }
 
+    override fun loadCreditsSerie(isSucess: Boolean) {
+        flagCreditsSerie.value = isSucess
+    }
+
     override fun loadDetailSerie(isSucess: Boolean) {
         flagDetailSerie.value = isSucess
     }
 
     override fun errorUI() {
-        TODO("Not yet implemented")
+        //late
+    }
+
+    override fun getContextFragment(): Context {
+        return requireContext()
     }
 
 }

@@ -1,8 +1,6 @@
 package com.lucasginard.pelispedia.login.signUp.presenter
 
-import com.lucasginard.pelispedia.login.signUp.SignUpFragment
 import org.junit.Assert.*
-
 import org.junit.Before
 import org.junit.Test
 
