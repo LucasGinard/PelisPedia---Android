@@ -24,7 +24,17 @@ class SignUpFragment : Fragment(),SignUpContract.View {
         _binding = FragmentSignUpBinding.inflate(layoutInflater)
         presenter = SignUpPresenter()
         configureOnClickListener()
+        configureSaveCheck()
         return _binding.root
+    }
+
+    private fun configureSaveCheck() {
+        val user = presenter.getSaveUser()
+        if (user != null){
+            _binding.editPassword.setText(user.password)
+            _binding.editUser.setText(user.username)
+            _binding.rememberMe.isChecked = user.check
+        }
     }
 
     private fun configureOnClickListener(){
@@ -36,6 +46,7 @@ class SignUpFragment : Fragment(),SignUpContract.View {
     private fun validateLogin(){
         try {
             if (presenter.validateInputs(_binding.editUser.text.toString(),_binding.editPassword.text.toString())){
+                presenter.saveUserData(_binding.editUser.text.toString(),_binding.editPassword.text.toString(),_binding.rememberMe.isChecked)
                 activity?.startActivity(Intent(activity, HomeActivity::class.java))
             }else{
                 showError()
