@@ -50,8 +50,10 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
         TemplateExampleTheme() {
             Surface(color = MaterialTheme.colors.background) {
                 presenter = DetailSeriePresenter(this)
-                serie.id?.let { presenter.getCreditsSerie(it) }
-                serie.id?.let { presenter.getDetailSerie(it) }
+                serie.id?.let {
+                    presenter.getCreditsSerie(it)
+                    presenter.getDetailSerie(it)
+                }
                 baseHomeDetail()
             }
         }
@@ -70,7 +72,7 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (flagCreditsSerie.value){
+            if (flagCreditsSerie.value && flagDetailSerie.value){
                 AsyncImage(
                     model = "${BuildConfig.BASE_URL_IMAGE}${serie.posterPath}",
                     contentDescription = "",
@@ -152,7 +154,7 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
                         .padding(end = 8.dp)
                 )
                 Text(
-                    text = "${presenter.getDetailSerie.lastEpisodeToAir?.seasonNumber.toString()} temporada"
+                    text = presenter.getDetailSerie.lastEpisodeToAir?.seasonNumber.toString()
                 )
             }
         }
@@ -169,8 +171,8 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
         )
-        LazyRow {
-            if (presenter.getListCast.isNotEmpty()){
+        if (presenter.getListCast != null && presenter.getListCast.size > 0){
+            LazyRow {
                 itemsIndexed(presenter.getListCast) { index, item ->
                     Card(
                         onClick = {

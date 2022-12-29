@@ -57,8 +57,9 @@ class SignUpFragment : Fragment(),SignUpContract.View {
     }
 
     override fun showError() {
-        _binding.editUser.error = activity?.getString(R.string.errorValidate) ?: ""
-        _binding.editPassword.error = activity?.getString(R.string.errorValidate) ?: ""
+        _binding.editUserContainer.error = activity?.getString(R.string.errorValidate) ?: ""
+        _binding.editPasswordContainer.error = activity?.getString(R.string.errorValidate) ?: ""
+        _binding.editPasswordContainer.errorIconDrawable = null
     }
 
     override fun hideError() {

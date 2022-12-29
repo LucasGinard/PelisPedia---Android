@@ -9,6 +9,6 @@
     <string name="titleCast">Elenco: </string>
     <string name="titleDescription">Descripción: </string>
     <string name="titleRated">Calificación: </string>
-    <string name="TvOnAirSesson">Al aire: </string>
+    <string name="TvOnAirSesson">Al aire temporada: </string>
     <string name="TvLastSesson">Última temporada: </string>
 </resources>
