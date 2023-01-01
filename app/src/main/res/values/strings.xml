@@ -10,5 +10,8 @@
     <string name="titleDescription">Descripción: </string>
     <string name="titleRated">Calificación: </string>
     <string name="TvOnAirSesson">Al aire temporada: </string>
-    <string name="TvLastSesson">Última temporada: </string>
+    <string name="TvLastSesson">Última temporada emitida: </string>
+    <string name="sessionExpired">Sesión expirada por inactividad</string>
+    <string name="errorTitleConnect">Ocurrió un error</string>
+    <string name="errorDescriptionConnect">Compruebe su conexión por favor o vuelva a intentarlo más tarde.</string>
 </resources>

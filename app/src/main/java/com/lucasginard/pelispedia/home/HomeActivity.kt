@@ -6,9 +6,10 @@ import com.lucasginard.pelispedia.databinding.ActivityHomeBinding
 import com.lucasginard.pelispedia.home.step1ListSeries.HomeListFragment
 import com.lucasginard.pelispedia.home.step1ListSeries.model.Serie
 import com.lucasginard.pelispedia.home.step2DetailSerie.DetailSerieFragment
+import com.lucasginard.pelispedia.login.BaseActivity
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
 
     private lateinit var binding:ActivityHomeBinding
 

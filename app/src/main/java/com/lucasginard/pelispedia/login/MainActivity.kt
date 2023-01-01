@@ -1,7 +1,7 @@
 package com.lucasginard.pelispedia.login
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.lucasginard.pelispedia.databinding.ActivityMainBinding
 import com.lucasginard.pelispedia.login.signUp.SignUpFragment
 

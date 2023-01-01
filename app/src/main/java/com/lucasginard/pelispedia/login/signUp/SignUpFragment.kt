@@ -11,6 +11,7 @@ import com.lucasginard.pelispedia.databinding.FragmentSignUpBinding
 import com.lucasginard.pelispedia.home.HomeActivity
 import com.lucasginard.pelispedia.login.signUp.presenter.SignUpContract
 import com.lucasginard.pelispedia.login.signUp.presenter.SignUpPresenter
+import com.lucasginard.pelispedia.utils.SessionCache
 
 class SignUpFragment : Fragment(),SignUpContract.View {
 
@@ -41,11 +42,18 @@ class SignUpFragment : Fragment(),SignUpContract.View {
         _binding.btnLogin.setOnClickListener {
             validateLogin()
         }
+
+        _binding.rememberMe.setOnCheckedChangeListener { compoundButton, b ->
+            if (!b){
+                presenter.deleteUserSave()
+            }
+        }
     }
 
     private fun validateLogin(){
         try {
             if (presenter.validateInputs(_binding.editUser.text.toString(),_binding.editPassword.text.toString())){
+                SessionCache.clear()
                 presenter.saveUserData(_binding.editUser.text.toString(),_binding.editPassword.text.toString(),_binding.rememberMe.isChecked)
                 activity?.startActivity(Intent(activity, HomeActivity::class.java))
             }else{

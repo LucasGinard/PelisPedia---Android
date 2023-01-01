@@ -29,14 +29,13 @@ import com.lucasginard.pelispedia.home.step1ListSeries.model.Serie
 import com.lucasginard.pelispedia.home.step1ListSeries.presenter.HomeListContract
 import com.lucasginard.pelispedia.home.step1ListSeries.presenter.HomeListPresenter
 import com.lucasginard.pelispedia.home.step1ListSeries.ui.theme.TemplateExampleTheme
-import com.lucasginard.pelispedia.utils.Constants
-import com.lucasginard.pelispedia.utils.ExpandableText
-import com.lucasginard.pelispedia.utils.contentView
+import com.lucasginard.pelispedia.utils.*
 
 class HomeListFragment : Fragment(), HomeListContract.View {
 
     lateinit var presenter:HomeListPresenter
     lateinit var flagListSerie: MutableState<Boolean>
+    lateinit var showDialogError: MutableState<Boolean>
     lateinit var listSeries: SnapshotStateList<Serie>
     lateinit var titleHome: MutableState<String>
     lateinit var activityHome:HomeActivity
@@ -50,7 +49,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
             Surface(color = MaterialTheme.colors.background) {
                 presenter = HomeListPresenter(this)
                 activityHome = activity as HomeActivity
-                presenter.getPopularSeries()
+                presenter.callServiceForSection(SessionCache.filterSeries)
                 baseHomeList()
             }
         }
@@ -59,6 +58,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
 
     @Composable
     private fun baseHomeList() {
+        showDialogError = remember { mutableStateOf(false) }
         titleHome = remember { mutableStateOf(options[0]) }
         flagListSerie = remember { mutableStateOf(false) }
         listSeries = remember { mutableStateListOf<Serie>() }
@@ -90,7 +90,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
     @Composable
     private fun componentSpinnerFilter(){
         var expanded by remember { mutableStateOf(false) }
-        var selectFilter by remember { mutableStateOf(0) }
+        var selectFilter by remember { mutableStateOf(SessionCache.filterSeries) }
 
         Box(
             contentAlignment = Alignment.Center,
@@ -116,7 +116,8 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                         onClick = {
                             titleHome.value = itemValue
                             selectFilter = itemIndex
-                            callService(itemValue)
+                            SessionCache.filterSeries = itemIndex
+                            presenter.callServiceForSection(itemIndex)
                             expanded = false
                         },
                         enabled = (itemIndex != selectFilter)
@@ -125,14 +126,6 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                     }
                 }
             }
-        }
-    }
-
-    private fun callService(call:String){
-        when(call){
-            Constants.TITLE_POPULAR -> presenter.getPopularSeries()
-            Constants.TITLE_ON_AIR-> presenter.getNowPlayingSeries()
-            Constants.TITLE_TOP_SCORE-> presenter.getTopRatedSeries()
         }
     }
 
@@ -187,6 +180,16 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                 }
             }
         }else{
+            if (showDialogError.value){
+                errorDialog(
+                    showDialogError.value,
+                    {activityHome.finish()},
+                    {
+                        presenter.getListSeries.addAll(SessionCache.listSeriesCache)
+                        showSeries(true,"En Cache")
+                    }
+                )
+            }
             CircularProgressIndicator()
         }
     }
@@ -211,10 +214,15 @@ class HomeListFragment : Fragment(), HomeListContract.View {
     }
 
     override fun showSeries(isSucess:Boolean, title:String) {
+        showDialogError.value = false
         flagListSerie.value = isSucess
         titleHome.value = title
         listSeries.clear()
         listSeries.addAll(presenter.getListSeries)
+    }
+
+    override fun showError(isError: Boolean) {
+        showDialogError.value = true
     }
 
     override fun goDetail(serie: Serie) {

@@ -8,6 +8,8 @@ import com.lucasginard.pelispedia.home.step2DetailSerie.model.DetailSerieRespons
 import com.lucasginard.pelispedia.network.APIService
 import com.lucasginard.pelispedia.network.Service
 import com.lucasginard.pelispedia.utils.Constants
+import com.lucasginard.pelispedia.utils.SessionCache
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,16 +18,31 @@ class DetailSeriePresenter(var view:DetailidSerieContract.View):DetailidSerieCon
 
     var getListCast = ArrayList<Cast>()
     var getListCrew = ArrayList<Crew>()
-    lateinit var getDetailSerie:DetailSerieResponse
+    var getDetailSerie = DetailSerieResponse()
+    val exceptionHandler = CoroutineExceptionHandler{_ , throwable->
+        view.errorUI()
+    }
+
+    override fun getDetailsSerie(idSerie: Int) {
+        getCreditsSerie(idSerie)
+        getDetailSerie(idSerie)
+    }
 
     override fun getCreditsSerie(idSerie:Int) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val call = Service.getService().create(APIService::class.java).getCreditsSerie(id = idSerie)
             if(call.isSuccessful){
                 getListCast.clear()
                 getListCrew.clear()
-                call.body()?.crew?.let { getListCrew.addAll(it) }
-                call.body()?.cast?.let { getListCast.addAll(it) }
+                if (!SessionCache.listElencoCache.contains(call.body())){
+                    call.body()?.let { SessionCache.listElencoCache.add(it) }
+                }
+                call.body()?.crew?.let {
+                    getListCrew.addAll(it)
+                }
+                call.body()?.cast?.let {
+                    getListCast.addAll(it)
+                }
                 view.loadCreditsSerie(true)
             }else{
                 Toast.makeText(view.getContextFragment(), Constants.ERRRO_DEFAULT, Toast.LENGTH_SHORT)
@@ -35,12 +52,15 @@ class DetailSeriePresenter(var view:DetailidSerieContract.View):DetailidSerieCon
     }
 
     override fun getDetailSerie(idSerie: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val call = Service.getService().create(APIService::class.java).getDetailSerie(id = idSerie)
             if(call.isSuccessful){
-                getListCast.clear()
-                getListCrew.clear()
-                call.body()?.let { getDetailSerie  = it }
+                call.body()?.let {
+                    if (!SessionCache.detailSerieCache.contains(call.body())){
+                        call.body()?.let { SessionCache.detailSerieCache.add(it) }
+                    }
+                    getDetailSerie = it
+                }
                 view.loadDetailSerie(true)
             }else{
                 Toast.makeText(view.getContextFragment(), Constants.ERRRO_DEFAULT, Toast.LENGTH_SHORT)
@@ -68,6 +88,6 @@ interface DetailidSerieContract{
         fun getCreditsSerie(idSerie:Int)
         fun getDetailSerie(idSerie: Int)
         fun getDirector():String
-
+        fun getDetailsSerie(idSerie: Int)
     }
 }

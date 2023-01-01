@@ -34,6 +34,10 @@ class SignUpPresenter():SignUpContract.Presenter {
         return null
     }
 
+    override fun deleteUserSave(){
+        PelisPediaApp.prefs.saveCheck = false
+    }
+
 }
 
 interface SignUpContract{
@@ -46,5 +50,6 @@ interface SignUpContract{
         fun validateInputs(user: String,password:String):Boolean
         fun saveUserData(user: String,password:String,check:Boolean)
         fun getSaveUser():UserSave?
+        fun deleteUserSave()
     }
 }

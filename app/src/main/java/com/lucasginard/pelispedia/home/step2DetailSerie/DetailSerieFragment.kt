@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -35,13 +37,17 @@ import com.lucasginard.pelispedia.home.step2DetailSerie.presenter.DetailidSerieC
 import com.lucasginard.pelispedia.home.step2DetailSerie.presenter.DetailSeriePresenter
 import com.lucasginard.pelispedia.utils.contentView
 import com.lucasginard.pelispedia.R
+import com.lucasginard.pelispedia.home.step2DetailSerie.model.DetailSerieResponse
+import com.lucasginard.pelispedia.utils.Constants
 import com.lucasginard.pelispedia.utils.ExpandableText
+import com.lucasginard.pelispedia.utils.SessionCache
 
 class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.View {
 
     lateinit var presenter:DetailSeriePresenter
     lateinit var flagCreditsSerie: MutableState<Boolean>
     lateinit var flagDetailSerie: MutableState<Boolean>
+    lateinit var flagIsCache: MutableState<Boolean>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +57,7 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
             Surface(color = MaterialTheme.colors.background) {
                 presenter = DetailSeriePresenter(this)
                 serie.id?.let {
-                    presenter.getCreditsSerie(it)
-                    presenter.getDetailSerie(it)
+                    presenter.getDetailsSerie(it)
                 }
                 baseHomeDetail()
             }
@@ -63,6 +68,7 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
     private fun baseHomeDetail() {
         flagCreditsSerie = remember { mutableStateOf(false) }
         flagDetailSerie = remember { mutableStateOf(false) }
+        flagIsCache = remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .padding(end = 20.dp, start = 20.dp,top = 12.dp)
@@ -72,7 +78,15 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (flagCreditsSerie.value && flagDetailSerie.value){
+            if (flagCreditsSerie.value && flagDetailSerie.value || flagIsCache.value){
+                if (flagIsCache.value){
+                    Toast.makeText(requireContext(),Constants.ERRRO_DEFAULT,Toast.LENGTH_LONG).show()
+                    val listCast = SessionCache.listElencoCache.find { it.id == serie.id }
+                    val detailSerie = SessionCache.detailSerieCache.find { it.id == serie.id }
+                    presenter.getListCast = listCast?.cast ?: ArrayList()
+                    presenter.getListCrew = listCast?.crew ?: ArrayList()
+                    if (detailSerie != null) presenter.getDetailSerie = detailSerie
+                }
                 AsyncImage(
                     model = "${BuildConfig.BASE_URL_IMAGE}${serie.posterPath}",
                     contentDescription = "",
@@ -145,7 +159,7 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
 
     @Composable
     private fun componentLastOrSeasonOnAir(){
-        if (flagDetailSerie.value){
+        if (flagDetailSerie.value || presenter.getDetailSerie.inProduction != null){
             val titleTextID = if (presenter.getDetailSerie.inProduction == true) R.string.TvOnAirSesson else R.string.TvLastSesson
             Row {
                 Text(
@@ -171,50 +185,49 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
         )
-        if (presenter.getListCast != null && presenter.getListCast.size > 0){
-            LazyRow {
-                itemsIndexed(presenter.getListCast) { index, item ->
-                    Card(
-                        onClick = {
+        LazyRow {
+            itemsIndexed(presenter.getListCast) { index, item ->
+                Card(
+                    onClick = {
 
-                        },
+                    },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(120.dp)
+                        .height(220.dp),
+                    elevation = 6.dp
+                ) {
+                    Column(
                         modifier = Modifier
                             .padding(8.dp)
-                            .width(120.dp)
-                            .height(220.dp),
-                        elevation = 6.dp
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
+                        Spacer(modifier = Modifier.height(5.dp))
+                        AsyncImage(
+                            model = "${BuildConfig.BASE_URL_IMAGE}${item.profilePath}",
+                            contentDescription = "",
+                            contentScale = ContentScale.Fit,
                             modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Spacer(modifier = Modifier.height(5.dp))
-                            AsyncImage(
-                                model = "${BuildConfig.BASE_URL_IMAGE}${item.profilePath}",
-                                contentDescription = "",
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier
-                                    .size(120.dp)
-                                    .padding(5.dp),
-                                alignment = Alignment.Center,
-                                placeholder = painterResource(id = R.drawable.ic_launcher_foreground)
+                                .size(120.dp)
+                                .padding(5.dp),
+                            alignment = Alignment.Center,
+                            placeholder = painterResource(id = R.drawable.ic_launcher_foreground)
 
+                        )
+                        Spacer(modifier = Modifier.height(5.dp))
+                        item.name?.let {
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(4.dp),
+                                textAlign = TextAlign.Center
                             )
-                            Spacer(modifier = Modifier.height(5.dp))
-                            item.name?.let {
-                                Text(
-                                    text = it,
-                                    modifier = Modifier.padding(4.dp),
-                                    textAlign = TextAlign.Center
-                                )
-                            }
                         }
                     }
                 }
             }
         }
+
     }
 
     override fun loadCreditsSerie(isSucess: Boolean) {
@@ -226,7 +239,7 @@ class DetailSerieFragment(var serie: Serie): Fragment(),DetailidSerieContract.Vi
     }
 
     override fun errorUI() {
-        //late
+        flagIsCache.value = true
     }
 
     override fun getContextFragment(): Context {
