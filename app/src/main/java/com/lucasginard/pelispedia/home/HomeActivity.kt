@@ -1,13 +1,11 @@
 package com.lucasginard.pelispedia.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.lucasginard.pelispedia.databinding.ActivityHomeBinding
 import com.lucasginard.pelispedia.home.step1ListSeries.HomeListFragment
 import com.lucasginard.pelispedia.home.step1ListSeries.model.Serie
 import com.lucasginard.pelispedia.home.step2DetailSerie.DetailSerieFragment
-import com.lucasginard.pelispedia.login.BaseActivity
-
+import com.lucasginard.pelispedia.utils.BaseActivity
 
 class HomeActivity : BaseActivity() {
 

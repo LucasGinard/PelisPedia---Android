@@ -80,7 +80,9 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                             .padding(top = 20.dp, bottom = 20.dp)
 
                     )
-                    componentSpinnerFilter()
+                    if(titleHome.value != "En Cache") {
+                        componentSpinnerFilter()
+                    }
                 }
                 componentListidSeries()
             }
@@ -180,18 +182,25 @@ class HomeListFragment : Fragment(), HomeListContract.View {
                 }
             }
         }else{
-            if (showDialogError.value){
+            if (SessionCache.flagNotShowDialogError){
+                setCacheList()
+            }else if (showDialogError.value){
                 errorDialog(
                     showDialogError.value,
-                    {activityHome.finish()},
+                    {activity?.finish()},
                     {
-                        presenter.getListSeries.addAll(SessionCache.listSeriesCache)
-                        showSeries(true,"En Cache")
+                        setCacheList()
                     }
                 )
             }
             CircularProgressIndicator()
         }
+    }
+
+    private fun setCacheList(){
+        presenter.getListSeries.addAll(SessionCache.listSeriesCache)
+        showSeries(true,"En Cache")
+        SessionCache.flagNotShowDialogError = true
     }
 
     @Composable
@@ -222,7 +231,7 @@ class HomeListFragment : Fragment(), HomeListContract.View {
     }
 
     override fun showError(isError: Boolean) {
-        showDialogError.value = true
+        if(!SessionCache.flagNotShowDialogError) showDialogError.value = true
     }
 
     override fun goDetail(serie: Serie) {

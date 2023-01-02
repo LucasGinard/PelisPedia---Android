@@ -10,8 +10,10 @@ class SessionCache {
         var listSeriesCache = ArrayList<Serie>()
         var listElencoCache = ArrayList<CreditsSerieResponse>()
         var detailSerieCache = ArrayList<DetailSerieResponse>()
+        var flagNotShowDialogError = false
         fun clear(){
             filterSeries = 0
+            flagNotShowDialogError = false
         }
     }
 }

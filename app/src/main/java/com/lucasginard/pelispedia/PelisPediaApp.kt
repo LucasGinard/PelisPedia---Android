@@ -3,7 +3,7 @@ package com.lucasginard.pelispedia
 import android.app.Application
 import android.util.Log
 import com.lucasginard.pelispedia.data.SharedPref
-import com.lucasginard.pelispedia.login.LogoutListener
+import com.lucasginard.pelispedia.utils.LogoutListener
 import java.util.*
 
 class PelisPediaApp: Application() {
